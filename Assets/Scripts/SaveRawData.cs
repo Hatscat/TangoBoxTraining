@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
+using System.IO;
 using Tango;
 
 public class SaveRawData : MonoBehaviour, ITangoVideoOverlay, ITangoDepth
@@ -19,7 +19,8 @@ public class SaveRawData : MonoBehaviour, ITangoVideoOverlay, ITangoDepth
 
 	public void OnTangoImageAvailableEventHandler (Tango.TangoEnums.TangoCameraId cameraId, Tango.TangoUnityImageData imageBuffer)
 	{
-		videoImages.Add(imageBuffer);	
+        if (imageBuffer != null)
+            videoImages.Add(imageBuffer);	
 	}
 
     public void OnTangoDepthAvailable (TangoUnityDepth tangoDepth)
@@ -49,5 +50,6 @@ public class SaveRawData : MonoBehaviour, ITangoVideoOverlay, ITangoDepth
 		rawData.depthPoints = depthPoints.ToArray();
 
 		string json = JsonUtility.ToJson(rawData);
+        File.WriteAllText(Application.dataPath + "./rawData.json", json);
 	}
 }
