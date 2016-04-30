@@ -9,7 +9,7 @@ public class SaveRawData : MonoBehaviour, ITangoVideoOverlay, ITangoDepth
 
 	private List<Tango.TangoUnityImageData> videoImages;
 	private List<Vector3[]> depthPoints;
-
+	private bool record;
 
 	public void StopRecord ()
 	{
@@ -19,21 +19,33 @@ public class SaveRawData : MonoBehaviour, ITangoVideoOverlay, ITangoDepth
 
 	public void OnTangoImageAvailableEventHandler (Tango.TangoEnums.TangoCameraId cameraId, Tango.TangoUnityImageData imageBuffer)
 	{
+		if (!record)
+			return;
+		
         if (imageBuffer != null)
             videoImages.Add(imageBuffer);	
 	}
 
     public void OnTangoDepthAvailable (TangoUnityDepth tangoDepth)
 	{
-		if (tangoPointCloud || tangoDepth == null || tangoDepth.m_points == null)
+		if (!record || tangoPointCloud || tangoDepth == null || tangoDepth.m_points == null)
 			return;
 
 		depthPoints.Add(tangoPointCloud.m_points);
 	}
 
-	private void Start ()
+	private void Awake ()
 	{
-		Reset();
+		DontDestroyOnLoad(gameObject);
+		//Reset();
+	}
+
+	private void OnGUI ()
+	{
+		if (GUI.Button (new Rect (Screen.width * 0.1f, Screen.height * 0.8f, 150, 100), record ? "Stop" : "Record"))
+		{
+			record = !record;
+		}
 	}
 
 	private void Reset ()
