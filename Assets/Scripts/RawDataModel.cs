@@ -26,9 +26,9 @@ public class FrameData
 	public FrameData (double _timestamp, Vector3[] _depthPoints, Byte[] _colorPixels, uint _imageWidth)
 	{
 		timestamp = _timestamp;
+		depthPoints = new Vec3[_depthPoints.Length];
 		colorPixels = _colorPixels;
 		imageWidth = _imageWidth;
-		depthPoints = new Vec3[_depthPoints.Length];
 
 		for (int i = 0; i < _depthPoints.Length; ++i)
 		{
